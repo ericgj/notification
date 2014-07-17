@@ -3,7 +3,8 @@
  * Module dependencies.
  */
 
-var dom = require('dom');
+var domify = require('domify');
+var classes = require('classes');
 var onBody = require('on-body');
 
 /**
@@ -16,14 +17,14 @@ exports = module.exports = notify;
  * Notification list.
  */
 
-var list = dom('<ul id="notifications">');
+var list = domify('<ul id="notifications">');
 
 /**
  * Append to body when it exists.
  */
 
 onBody(function (body) {
-  list.appendTo(body);
+  body.appendChild(list);
 });
 
 /**
@@ -92,7 +93,7 @@ exports.Notification = Notification;
 
 function Notification(options) {
   options = options || {};
-  this.el = dom(require('./template'));
+  this.el = domify(require('./template'));
   this.render(options);
   if (options.classname) this.el.addClass(options.classname);
   if (Notification.effect) this.effect(Notification.effect);
@@ -111,23 +112,20 @@ Notification.prototype.render = function(options){
     , msg = options.message
     , self = this;
 
-  el.find('.close').on('click', function(){
+  el.querySelector('.close').addEventListener('click', function(){
     self.hide();
     return false;
   });
 
-  el.find('.title').text(title);
-  if (!title) el.find('.title').remove();
+  el.querySelector('.title').innerText = title;
+  if (!title) el.querySelector('.title').remove();
 
-  // message
-  if ('string' == typeof msg) {
-    el.find('p').text(msg);
-  } else if (msg) {
-    el.find('p').replace(msg.el || msg);
-  }
+  // message: note we simply assume it's a string here, not a sub-view
+  // as in component/notification.
+  el.querySelector('p').innerText = msg;
 
   setTimeout(function(){
-    el.removeClass('hide');
+    classes(el).remove('hide');
   }, 0);
 };
 
@@ -139,7 +137,7 @@ Notification.prototype.render = function(options){
  */
 
 Notification.prototype.closable = function(){
-  this.el.addClass('closable');
+  classes(this.el).add('closable');
   return this;
 };
 
@@ -153,7 +151,7 @@ Notification.prototype.closable = function(){
 
 Notification.prototype.effect = function(type){
   this._effect = type;
-  this.el.addClass(type);
+  classes(this.el).add(type);
   return this;
 };
 
@@ -165,7 +163,7 @@ Notification.prototype.effect = function(type){
  */
 
 Notification.prototype.show = function(){
-  this.el.appendTo(list);
+  list.appendChild(this.el);
   return this;
 };
 
@@ -179,7 +177,7 @@ Notification.prototype.show = function(){
 
 Notification.prototype.type = function(type){
   this._type = type;
-  this.el.addClass(type);
+  classes(this.el).add(type);
   return this;
 };
 
@@ -217,7 +215,7 @@ Notification.prototype.hide = function(ms){
   }
 
   // hide / remove
-  this.el.addClass('hide');
+  classes(this.el).add('hide');
   if (this._effect) {
     setTimeout(function(self){
       self.remove();
@@ -237,6 +235,6 @@ Notification.prototype.hide = function(ms){
  */
 
 Notification.prototype.remove = function(){
-  this.el.remove();
+  this.el.parentNode.removeChild(this.el);
   return this;
 };

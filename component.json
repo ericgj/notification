@@ -1,7 +1,7 @@
 {
   "name": "notification",
   "description": "Notification component",
-  "version": "0.0.5",
+  "version": "0.1.1",
   "keywords": [
     "notify",
     "notification",
@@ -9,7 +9,8 @@
     "growl"
   ],
   "dependencies": {
-    "component/dom": "*",
+    "component/domify": "*",
+    "component/classes": "*",
     "segmentio/on-body": "*"
   },
   "scripts": [

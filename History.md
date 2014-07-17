@@ -1,3 +1,9 @@
+0.1.1 / 2014-07-17 / Eric Gjertsen
+==================================
+
+ * replace component/dom with domify and classes
+ * remove emitter (not needed)
+ * remove passing "sub-view" as message, message is assumed to be a string.
 
 0.0.4 / 2014-03-17
 ==================
