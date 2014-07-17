@@ -10,7 +10,6 @@
   ],
   "dependencies": {
     "component/dom": "*",
-    "component/emitter": "1.0.1",
     "segmentio/on-body": "*"
   },
   "scripts": [

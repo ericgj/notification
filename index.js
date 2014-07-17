@@ -4,7 +4,6 @@
  */
 
 var dom = require('dom');
-var Emitter = require('emitter');
 var onBody = require('on-body');
 
 /**
@@ -92,19 +91,12 @@ exports.Notification = Notification;
  */
 
 function Notification(options) {
-  Emitter.call(this);
   options = options || {};
   this.el = dom(require('./template'));
   this.render(options);
   if (options.classname) this.el.addClass(options.classname);
   if (Notification.effect) this.effect(Notification.effect);
 }
-
-/**
- * Inherit from `Emitter.prototype`.
- */
-
-Notification.prototype = new Emitter;
 
 /**
  * Render with the given `options`.
@@ -120,14 +112,8 @@ Notification.prototype.render = function(options){
     , self = this;
 
   el.find('.close').on('click', function(){
-    self.emit('close');
     self.hide();
     return false;
-  });
-
-  el.on('click', function(e){
-    e.preventDefault();
-    self.emit('click', e);
   });
 
   el.find('.title').text(title);
